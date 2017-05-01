@@ -7,19 +7,21 @@ import './assets/css/base.min.css';
 class App extends Component {
     constructor(){
         super();
-        this.state = {lista: []};
+        this.state = {lista : [],nome:'',email:'',senha:''};
+        this.enviaForm = this.enviaForm.bind(this);
+        this.setNome = this.setNome.bind(this);
+        this.setEmail = this.setEmail.bind(this);
+        this.setSenha = this.setSenha.bind(this);
     }
 
-    enviarForm(event){
+    enviaForm(event){
         event.preventDefault();
-        console.log("Formulario enviado");
-
         $.ajax({
-            url: "http//localhost:8080/tethys/api/autores",
-            contentType: 'application/json',
+            url:'http://localhost:8080/tethys/api/autores',
+            contentType:'application/json',
             dataType:'json',
             type:'post',
-            data: JSON.stringfy({nome:'',email:'',senha:''}),
+            data: JSON.stringify({nome:this.state.nome, email:this.state.email, senha:this.state.senha}),
             success: function(resposta){
                 console.log("enviado com sucesso");
             },
@@ -27,6 +29,18 @@ class App extends Component {
                 console.log("erro");
             }
         });
+    }
+
+    setNome(event){
+        this.setState({nome:event.target.value});
+    }
+
+    setEmail(event){
+        this.setState({email:event.target.value});
+    }
+
+    setSenha(event){
+        this.setState({senha:event.target.value});
     }
 
     componentDidMount(){
@@ -92,12 +106,12 @@ class App extends Component {
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <div className="alert-container"></div>
-                                <form method="post" className="form" id="formInsertEdit" role="form" onSubmit={this.enviarForm}>
+                                <form className="form" onSubmit={this.enviaForm} method="post">
                                     <div className="row">
                                         <div className="col-md-9">
                                             <div className="form-group">
                                                 <label className="control-label">Nome:</label>
-                                                <input type="text" name="nm_pessoa" id="nm_pessoa" value="" className="form-control" />
+                                                <input type="text" name="nm_autor" id="nm_autor" value={this.state.nome} className="form-control" onChange={this.setNome}/>
                                             </div>
                                         </div>
                                     </div>
@@ -105,7 +119,7 @@ class App extends Component {
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label className="control-label">Email:</label>
-                                                <input type="text" name="nm_email" id="nm_email" value="" className="form-control" />
+                                                <input type="email" name="nm_email" id="nm_email" value={this.state.email} className="form-control" onChange={this.setEmail}/>
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +127,7 @@ class App extends Component {
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label className="control-label">Senha:</label>
-                                                <input type="password" name="nm_senha" id="nm_senha" value="" className="form-control" />
+                                                <input type="password" name="nm_senha" id="nm_senha" value={this.state.senha} className="form-control" onChange={this.setSenha}/>
                                             </div>
                                         </div>
                                     </div>
