@@ -10,12 +10,30 @@ class App extends Component {
         this.state = {lista: []};
     }
 
+    enviarForm(event){
+        event.preventDefault();
+        console.log("Formulario enviado");
+
+        $.ajax({
+            url: "http//localhost:8080/tethys/api/autores",
+            contentType: 'application/json',
+            dataType:'json',
+            type:'post',
+            data: JSON.stringfy({nome:'',email:'',senha:''}),
+            success: function(resposta){
+                console.log("enviado com sucesso");
+            },
+            error: function(resposta){
+                console.log("erro");
+            }
+        });
+    }
+
     componentDidMount(){
         $.ajax({
           url:"http://localhost:8080/tethys/api/autores",
           dataType: 'json',
           success: function (resposta) {
-              console.log(resposta);
               this.setState({lista:resposta})
           }.bind(this)
         });
@@ -68,38 +86,82 @@ class App extends Component {
                 <div id="content">
                     <div className="container" id="container-body">
                         <h3><i className="fa fa-users"></i> Modelo </h3>
-                        <a href="#" className="command-page" onclick="">
+                        <a href="#" className="command-page">
                             <span className="fa fa-reply"></span> Voltar
                         </a>
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <div className="alert-container"></div>
-                                <form action="" method="post" className="form" id="formInsertEdit" role="form">
-
+                                <form method="post" className="form" id="formInsertEdit" role="form" onSubmit={this.enviarForm}>
+                                    <div className="row">
+                                        <div className="col-md-9">
+                                            <div className="form-group">
+                                                <label className="control-label">Nome:</label>
+                                                <input type="text" name="nm_pessoa" id="nm_pessoa" value="" className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label className="control-label">Email:</label>
+                                                <input type="text" name="nm_email" id="nm_email" value="" className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label className="control-label">Senha:</label>
+                                                <input type="password" name="nm_senha" id="nm_senha" value="" className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <div className="btn-group" role="group" aria-label="...">
+                                                    <button type="submit" id="btSearch" className="btn btn-success"><span className="fa fa-save"></span> Gravar</button>
+                                                    <button type="button" className="btn btn-default btLimpar"><span className="fa fa-eraser"></span> Limpar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </form>
-                                <table className="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th width="25" className="check">
-                                                <input type="checkbox" id="btCheckAll"/></th>
-                                            <th>Nome</th>
-                                            <th>Email</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {
-                                        this.state.lista.map(function (autor) {
-                                            return (
-                                              <tr key={autor.id}>
-                                                  <td><input type="checkbox" id="btCheckOne" value={autor.id}/></td>
-                                                  <td>{autor.nome}</td>
-                                                  <td>{autor.email}</td>
-                                              </tr>
-                                            );
-                                        })
-                                    }
-                                    </tbody>
-                                </table>
+
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <table className="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th width="25" className="check">
+                                                        <input type="checkbox" id="btCheckAll"/></th>
+                                                    <th className="text-left">Nome</th>
+                                                    <th className="text-left">Email</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                this.state.lista.map(function (autor) {
+                                                    return (
+                                                      <tr key={autor.id}>
+                                                          <td><input type="checkbox" id="btCheckOne" value={autor.id}/></td>
+                                                          <td>{autor.nome}</td>
+                                                          <td>{autor.email}</td>
+                                                          <td>
+                                                              <button type="button" className="btn btn-default btn-xs" title="Editar" data-toggle="tooltip">
+                                                                  <span className="fa fa-pencil"></span>
+                                                              </button>
+                                                          </td>
+                                                      </tr>
+                                                    );
+                                                })
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
