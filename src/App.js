@@ -3,6 +3,8 @@ import $ from 'jquery';
 import './assets/css/bootstrap.min.css';
 import './assets/css/font-awesome.min.css';
 import './assets/css/base.min.css';
+import InputCustomizado from './components/InputCustomizado';
+import GroupButtonSearchComponent from './components/GroupButtonSearchComponent';
 
 class App extends Component {
     constructor(){
@@ -17,16 +19,16 @@ class App extends Component {
     enviaForm(event){
         event.preventDefault();
         $.ajax({
-            url:'http://localhost:8080/tethys/api/autores',
-            contentType:'application/json',
-            dataType:'json',
-            type:'post',
+            type: 'post',
+            url: 'http://localhost:8080/tethys/api/autores',
             data: JSON.stringify({nome:this.state.nome, email:this.state.email, senha:this.state.senha}),
+            contentType: "application/json; charset=utf-8",
+            traditional: true,
             success: function(resposta){
-                console.log("enviado com sucesso");
-            },
+                this.setState({lista:resposta})
+            }.bind(this),
             error: function(resposta){
-                console.log("erro");
+                console.log("erro: "+resposta);
             }
         });
     }
@@ -45,11 +47,16 @@ class App extends Component {
 
     componentDidMount(){
         $.ajax({
-          url:"http://localhost:8080/tethys/api/autores",
-          dataType: 'json',
-          success: function (resposta) {
-              this.setState({lista:resposta})
-          }.bind(this)
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'text/plain'
+            },
+            async:false,
+            url:"http://localhost:8080/tethys/api/autores",
+            dataType: 'json',
+            success: function (resposta) {
+                this.setState({lista:resposta})
+            }.bind(this)
         });
     }
 
@@ -107,40 +114,10 @@ class App extends Component {
                             <div className="panel-body">
                                 <div className="alert-container"></div>
                                 <form className="form" onSubmit={this.enviaForm} method="post">
-                                    <div className="row">
-                                        <div className="col-md-9">
-                                            <div className="form-group">
-                                                <label className="control-label">Nome:</label>
-                                                <input type="text" name="nm_autor" id="nm_autor" value={this.state.nome} className="form-control" onChange={this.setNome}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label className="control-label">Email:</label>
-                                                <input type="email" name="nm_email" id="nm_email" value={this.state.email} className="form-control" onChange={this.setEmail}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label className="control-label">Senha:</label>
-                                                <input type="password" name="nm_senha" id="nm_senha" value={this.state.senha} className="form-control" onChange={this.setSenha}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <div className="btn-group" role="group" aria-label="...">
-                                                    <button type="submit" id="btSearch" className="btn btn-success"><span className="fa fa-save"></span> Gravar</button>
-                                                    <button type="button" className="btn btn-default btLimpar"><span className="fa fa-eraser"></span> Limpar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <InputCustomizado div="col-md-9" label="Nome" type="text" name="nm_autor" id="nm_autor" value={this.state.nome} onChange={this.setNome}/>
+                                    <InputCustomizado div="col-md-6" label="Email" type="email" name="nm_email" id="nm_email" value={this.state.email} onChange={this.setEmail}/>
+                                    <InputCustomizado div="col-md-6" label="Senha" type="password" name="nm_senha" id="nm_senha" value={this.state.senha} onChange={this.setSenha}/>
+                                    <GroupButtonSearchComponent div="col-md-9" id="btSearch"/>
                                 </form>
 
                                 <div className="row">
