@@ -6,6 +6,7 @@ import $ from 'jquery';
 import PubSub from 'pubsub-js';
 import InputCustomizado from '../components/InputCustomizado';
 import GroupButtonSearchComponent from '../components/GroupButtonSearchComponent';
+import TratadorErros from '../validator/TratadorErros';
 
 class FormularioAutor extends Component{
     constructor(){
@@ -27,9 +28,15 @@ class FormularioAutor extends Component{
             traditional: true,
             success: function(novaListagem){
                 PubSub.publish('atualiza-lista-autores',novaListagem);
-            },
+                this.setState({nome:'',email:'',senha:''});
+            }.bind(this),
             error: function(resposta){
-                console.log("erro: "+resposta);
+                if(resposta.status === 400){
+                    new TratadorErros().publicaErros(resposta.responseJSON);
+                }
+            },
+            beforeSend: function(){
+                PubSub.publish("limpa-erros",{});
             }
         });
     }
