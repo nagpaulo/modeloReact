@@ -45,6 +45,8 @@ class App extends Component {
                                         <i className="fa fa-home"></i> Início
                                     </a>
                                 </li>
+                                <li><a href="javascript:void(0);"><i className="fa fa-apple"></i> Autor</a></li>
+                                <li><a href="javascript:void(0);"><i className="fa fa-book"></i> Livro</a></li>
                             </ul>
                         </div>
                     </div>

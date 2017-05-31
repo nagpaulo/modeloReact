@@ -22,7 +22,7 @@ class FormularioAutor extends Component{
         event.preventDefault();
         $.ajax({
             type: 'post',
-            url: 'http://localhost:8080/tethys/api/autores',
+            url: 'http://localhost:8080/autores',
             data: JSON.stringify({nome:this.state.nome, email:this.state.email, senha:this.state.senha}),
             contentType: "application/json; charset=utf-8",
             traditional: true,
@@ -114,12 +114,14 @@ export default class AutorBox extends Component{
 
     componentDidMount(){
         $.ajax({
+            type: 'get',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'text/plain'
             },
+            crossDomain: true,
             async:false,
-            url:"http://localhost:8080/tethys/api/autores",
+            url:"http://localhost:8080/autores",
             dataType: 'json',
             success: function (resposta) {
                 this.setState({lista:resposta})
